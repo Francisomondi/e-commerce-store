@@ -85,11 +85,11 @@ export const login = async (req,res)=>{
         name:user.name,
         _id:user._id,
         role:user.role
-    }},
+    }, message: "User loged in successfully"},
 )
-console.log(`${user.name} logged in successfully`)
+
 }catch(error){
-    console.log("error logging in", error.message)
+  
     res.status(500).json({message: error.message})
 }
 }
@@ -112,10 +112,41 @@ export const logout = async (req,res)=>{
         res.clearCookie("access_token");
         return res.status(200).json({message: "Logout successful"})
     } catch (error) {
-        console.log("error logging out", error.message)
+       
         res.status(500).json({message: "Logout failed", error: error.message})
     }
 
    
 }
 
+export const refreshToken = async(req,res)=>{
+    try {
+        const refreshToken = req.cookies?.refresh_token
+
+        if(!refreshToken) {
+             return res.status(401).json({message: "no refresh token"})
+        }    
+           
+             
+                const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET)
+            
+             //
+            const storedRefreshToken =  await redis.get(`refresh_token:${decoded.id}`); 
+            if (!storedRefreshToken || storedRefreshToken !== refreshToken) {
+             return res.status(403).json({message: "invalid refresh token!"})
+            }
+            const accessToken = jwt.sign({id: decoded.id}, process.env.ACCESS_TOKEN_SECRET, {
+             expiresIn: "15m"
+            })
+            res.cookie("access_token", accessToken, {
+             httpOnly: true,
+             secure: process.env.NODE_ENV === "production",
+             sameSite: "strict",
+             maxAge: 15*60*1000      
+            })
+            return res.status(200).json({message: "Token refreshed successfully"})
+        }
+     catch (error) {
+        res.status(500).json({message: "Refresh token failed", error: error.message})
+    }
+}
