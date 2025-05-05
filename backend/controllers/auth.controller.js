@@ -70,7 +70,11 @@ export const login = async (req,res)=>{
     if(!user){
         return res.status(400).json({message: "User does not exist"})
     }
-    (user && await user.comparePassword(password))
+
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
 
     const{accessToken,refreshToken} = generateTokens(user._id)
     await storeRefreshToken(user._id, refreshToken)
