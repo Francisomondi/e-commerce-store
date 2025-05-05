@@ -12,22 +12,22 @@ const generateTokens = (user)=>{
      return { accessToken, refreshToken };
 } 
    
-const storeRefreshToken = async(userId,refreshToken) =>{
-    await redis.set(`refresh_token: ${userId}`, refreshToken,"EX", 7*24*60*60)
+const storeRefreshToken = async(id,refreshToken) =>{
+    await redis.set(`refresh_token:${id}`, refreshToken,"EX", 7*24*60*60)
 }
 
 const setCookies = (accessToken,refreshToken,res)=>{
     res.cookie("access_token", accessToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "strict",
-        maxAge: 15*60*1000
+        httpOnly: true, //accessible only by web server
+        secure: process.env.NODE_ENV === "production", //   https
+        sameSite: "strict", //cross-site request forgery
+        maxAge: 15*60*1000 //15 minutes
     })
     res.cookie("refresh_token", refreshToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "strict",
-        maxAge: 7*24*60*60
+        httpOnly: true, //accessible only by web server
+        secure: process.env.NODE_ENV === "production", //https
+        sameSite: "strict", //cross-site request forgery
+        maxAge: 7*24*60*60 //7 days
     })
 }
 export const signup = async (req,res)=>{
@@ -65,6 +65,26 @@ export const login = async (req,res)=>{
     res.send("this is the login route")
 }
 export const logout = async (req,res)=>{
-    res.send("this is the logout route")
+    try {
+        const refreshToken = req.cookies?.refresh_token
+
+        if(refreshToken) {
+            let decoded;
+            try {
+                decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET)
+            } catch (error) {
+                return res.sendStatus(403)
+            }
+              // Clear from Redis
+             await redis.del(`refresh_token:${decoded.id}`);
+        }
+        res.clearCookie("refresh_token");
+        res.clearCookie("access_token");
+        return res.status(200).json({message: "Logout successful"})
+    } catch (error) {
+        res.status(500).json({message: "Logout failed", error: error.message})
+    }
+
+   
 }
 
