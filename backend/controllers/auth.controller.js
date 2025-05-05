@@ -62,8 +62,34 @@ export const signup = async (req,res)=>{
 }
 
 export const login = async (req,res)=>{
-    res.send("this is the login route")
+  
+   try {
+    const {email,password} = req.body
+    const user = await User.findOne({email})
+
+    if(!user){
+        return res.status(400).json({message: "User does not exist"})
+    }
+    (user && await user.comparePassword(password))
+
+    const{accessToken,refreshToken} = generateTokens(user._id)
+    await storeRefreshToken(user._id, refreshToken)
+
+    setCookies(accessToken,refreshToken,res)    
+    res.status(200).json({user:{
+        email:user.email,
+        name:user.name,
+        _id:user._id,
+        role:user.role
+    }},
+)
+console.log(`${user.name} logged in successfully`)
+}catch(error){
+    console.log("error logging in", error.message)
+    res.status(500).json({message: error.message})
 }
+}
+
 export const logout = async (req,res)=>{
     try {
         const refreshToken = req.cookies?.refresh_token
@@ -82,6 +108,7 @@ export const logout = async (req,res)=>{
         res.clearCookie("access_token");
         return res.status(200).json({message: "Logout successful"})
     } catch (error) {
+        console.log("error logging out", error.message)
         res.status(500).json({message: "Logout failed", error: error.message})
     }
 
