@@ -150,3 +150,18 @@ export const refreshToken = async(req,res)=>{
         res.status(500).json({message: "Refresh token failed", error: error.message})
     }
 }
+
+export const getProfile = async(req,res)=>{
+    try {
+        const user = req.user
+        res.status(200).json({user:{
+            email:user.email,
+            name:user.name,
+            _id:user._id,
+            role:user.role
+        }, message: "User profile fetched successfully"})
+
+    } catch (error) {
+        res.status(500).json({message: error.message})
+    }
+}   
