@@ -32,7 +32,7 @@ export const getFeaturedProducts = async (req,res)=>{
         }
         await redis.set("featured_products", JSON.stringify(featured_products))
 
-        res.status(200).json({message: "Products fetched successfully"}, featured_products)
+        res.status(200).json({message: "Products fetched successfully", products: featured_products})
     } catch (error) {
         res.status(500).json({message: error.message})
     }
@@ -111,7 +111,7 @@ export const getProductsBycategory = async (req,res)=>{
     try {
         const { category } = req.params
         const products = await Product.find({category}).lean()
-        res.status(200).json({message: "Products fetched successfully"}, products)
+        res.status(200).json({message: "Products fetched successfully", products: products})
     } catch (error) {
         res.status(500).json({message: error.message})
     }
@@ -126,13 +126,19 @@ export const toggleFeaturedProduct = async (req,res)=>{
         product.isfeatured = !product.isfeatured
         const updatedProduct = await product.save()
         await updatedFeaturedProductsCache()
-        res.status(200).json({message: "Product updated successfully"},updatedProduct)
+        res.status(200).json({message: "Product updated successfully", product: updatedProduct})
     } catch (error) {
         res.status(500).json({message: error.message})
     }
 }
 
 async function updatedFeaturedProductsCache() {
-    const featured_products = await Product.find({isfeatured: true}).lean()
-    await redis.set("featured_products", JSON.stringify(featured_products))
+
+    try {
+        const featured_products = await Product.find({isfeatured: true}).lean()
+        await redis.set("featured_products", JSON.stringify(featured_products))
+     }
+     catch (error) {
+        console.log(error)
+     }
 }
