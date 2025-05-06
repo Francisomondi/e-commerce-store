@@ -44,6 +44,20 @@ export const getCart = async (req, res) => {
 
 export const updateQuantity = async (req, res) => {
     try {
+        const { id: productId, quantity } = req.body
+        const user = req.user
+        const existingItem = await cartItems.find(item => item.id === productId)
+        if (existingItem && quantity === 0) {
+            user.cartItems = user.cartItems.filter(item => item.id !== productId)
+            await user.save()   
+            return res.status(200).json( user.cartItems )
+
+        } else {
+           res.status(404).json({ message: "Product not found" }) 
+        }
+        existingItem.quantity = quantity
+        await user.save()
+
         res.status(200).json({ message: "Product quantity updated successfully" })
     } catch (error) {
         res.status(500).json({ message: error.message })
