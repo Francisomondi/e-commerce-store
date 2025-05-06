@@ -81,3 +81,38 @@ export const deleteProduct = async (req,res)=>{
         res.status(500).json({message: error.message})
     }
 }
+
+export const getRecommendedProducts = async (req,res)=>{
+    try {
+        const products = await Product.aggregate([
+            {$sample: {size: 3}},
+            {$lookup: {
+                from: "categories",
+                localField: "category",
+                foreignField: "_id",
+                as: "category"
+            }},
+            {$project: {
+                _id: 1,
+                name: 1,
+                description: 1,
+                price: 1,
+                image: 1
+                
+            }}
+        ])
+        res.status(200).json({message: "Products fetched successfully"})
+    } catch (error) {
+        res.status(500).json({message: error.message})
+    }
+}
+
+export const getProductsBycategory = async (req,res)=>{
+    try {
+        const { category } = req.params
+        const products = await Product.find({category}).lean()
+        res.status(200).json({message: "Products fetched successfully"}, products)
+    } catch (error) {
+        res.status(500).json({message: error.message})
+    }
+}
