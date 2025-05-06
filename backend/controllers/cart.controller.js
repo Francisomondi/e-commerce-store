@@ -1,3 +1,5 @@
+import Product from "../models/product.model.js"
+
 export const addToCart = async (req, res) => {
     try {
         const { productId } = req.body
@@ -36,7 +38,10 @@ export const removeFromCart = async (req, res) => {
 
 export const getCart = async (req, res) => {
     try {
-        res.status(200).json({ message: "Cart fetched successfully" })
+        const products = await Product.find({ _id: { $in: req.user.cartItems.map(item => item.id) } }).lean()
+        return res.status(200).json({ message: "Cart fetched successfully", products })
+        
+
     } catch (error) {
         res.status(500).json({ message: error.message })
     }
