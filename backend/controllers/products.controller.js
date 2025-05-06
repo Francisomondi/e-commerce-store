@@ -71,7 +71,7 @@ export const deleteProduct = async (req,res)=>{
                 await cloudinary.uploader.destroy(`products/${product.image.split("/").pop().split(".")[0]}`)
                 console.log("deleted image from cloudinary")
             } catch (error) {
-                console.log("errr deleting image", error.message)
+                console.log("error deleting image", error.message)
             }
            
         }
@@ -91,14 +91,6 @@ export const getRecommendedProducts = async (req,res)=>{
                 localField: "category",
                 foreignField: "_id",
                 as: "category"
-            }},
-            {$project: {
-                _id: 1,
-                name: 1,
-                description: 1,
-                price: 1,
-                image: 1
-                
             }}
         ])
         res.status(200).json({message: "Products fetched successfully"})
