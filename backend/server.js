@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import productsRoute from "./routes/products.route.js"
 import cartRoutes from "./routes/cart.route.js"
 import couponRoutes from "./routes/coupon.route.js"
+import paymentRoutes from "./routes/payment.route.js"
 dotenv.config()
 
 const app = express()
@@ -19,6 +20,7 @@ app.use("/api/auth", authRoutes)
 app.use("/api/products", productsRoute)
 app.use("/api/cart", cartRoutes)
 app.use("/api/coupon", couponRoutes)
+app.use("/api/payment", paymentRoutes)
 
 console.log(process.env.PORT)
 

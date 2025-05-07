@@ -8,7 +8,6 @@ export const getCoupons = async (req, res) => {
         const coupon = await couponModel.findOne({userId: req.user._id,isActive: true})
         res.json(coupon || null) 
 
-        res.status(200).json({ message: "Coupons fetched successfully" })
     } catch (error) {
         console.log("error fetching coupons", error.message)
         res.status(500).json({ message: error.message })
