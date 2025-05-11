@@ -17,7 +17,6 @@ const Signup = () => {
 	const {signup,loading} = useUserStore();
   const handleSubmit = async (e) => {
     e.preventDefault();
-	console.log("called here")
     await signup(formData)
   }
   return (
