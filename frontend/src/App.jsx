@@ -4,6 +4,7 @@ import Login from "./pages/Login"
 import Signup from "./pages/Signup"
 import Navbar from "./components/Navbar"
 import React from 'react'; // ✅ Add this line
+import { Toaster } from "react-hot-toast"
 
 
 function App() {
@@ -23,7 +24,9 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
         </Routes>
+       
       </div>
+       <Toaster />
   </div>
   )
 }

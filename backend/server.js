@@ -2,6 +2,7 @@ import express from "express"
 import dotenv from "dotenv"
 import authRoutes from "./routes/auth.route.js"
 import { connectDB } from "./lib/db.js"
+import cors from "cors"
 
 import cookieParser from 'cookie-parser';
 import productsRoute from "./routes/products.route.js"
@@ -13,6 +14,13 @@ dotenv.config()
 
 const app = express()
 const PORT = process.env.PORT || 5000
+
+
+// Allow requests from your Vite frontend
+app.use(cors({
+  origin: "http://localhost:5173", // React app origin
+  credentials: true // If you're using cookies or auth headers
+}));
 
 app.use(express.json())
 app.use(cookieParser());
