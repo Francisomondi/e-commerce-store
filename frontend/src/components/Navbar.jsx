@@ -1,11 +1,19 @@
 import React from 'react'
 import { ShoppingCart, UserPlus, LogIn, LogOut, Lock } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
+import { useUserStore } from '../stores/useUserstore'
 
 const Navbar = () => {
 
-  const user = false
-  const isAdmin = false
+  const {user, Logout} = useUserStore()	
+  const isAdmin = user?.role === "admin"
+
+
+  const handleLogout = async () => {
+  console.log("Logging out..."); // confirm it's called
+  await Logout();
+  <Navigate to="/login" />
+};
   return (
     <header 
         className='flex top-0 left-0 w-full 
@@ -57,7 +65,7 @@ const Navbar = () => {
 					<button
 						className='bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 
 						rounded-md flex items-center transition duration-300 ease-in-out'
-						onClick={LogOut}
+						onClick={handleLogout}
 					>
 							<LogOut size={18} />
 								<span className='hidden sm:inline ml-2'>Log Out</span>

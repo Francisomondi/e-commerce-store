@@ -113,7 +113,8 @@ export const logout = async (req,res)=>{
         return res.status(200).json({message: "Logout successful"})
     } catch (error) {
        
-        res.status(500).json({message: "Logout failed", error: error.message})
+        console.log("Error in logout controller", error.message);
+		res.status(500).json({ message: "Server error", error: error.message });
     }
 
    
@@ -151,17 +152,10 @@ export const refreshToken = async(req,res)=>{
     }
 }
 
-export const getProfile = async(req,res)=>{
-    try {
-        const user = req.user
-        res.status(200).json({user:{
-            email:user.email,
-            name:user.name,
-            _id:user._id,
-            role:user.role
-        }, message: "User profile fetched successfully"})
-
-    } catch (error) {
-        res.status(500).json({message: error.message})
-    }
-}   
+export const getProfile = async (req, res) => {
+	try {
+		await res.json(req.user);
+	} catch (error) {
+		res.status(500).json({ message: "Server error", error: error.message });
+	}
+};
