@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { LogIn, Mail, Lock, ArrowRight, Loader } from "lucide-react";
 import { useUserStore } from '../stores/useUserstore';
+import toast from 'react-hot-toast';
 
 const Login = () => {
 	
@@ -16,6 +17,7 @@ const Login = () => {
 		e.preventDefault();
 		
 		login(email, password);
+		toast.success("Logged in successfully");
 	};
   
   return (

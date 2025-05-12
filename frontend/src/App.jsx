@@ -7,6 +7,7 @@ import React, { useEffect } from 'react'; // ✅ Add this line
 import { Toaster } from "react-hot-toast"
 import { useUserStore } from "./stores/useUserstore"
 import LoadingSpinner from "./components/LoadingSpinner"
+import AdminDashboard from "./pages/AdminDashboard"
 
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={!user ? <Login /> : <Navigate to="/" /> } />
           <Route path="/signup" element={!user ? <Signup /> : <Navigate to="/" /> } />
+           <Route path="/admin-dashboard" element={user?.role === "admin" ? <AdminDashboard /> : <Navigate to="/login" /> } />
         </Routes>
        
       </div>
