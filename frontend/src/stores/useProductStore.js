@@ -29,10 +29,15 @@ export const useProductStore = create((set) => ({
             toast.error(error.response.data.message || "An error occurred");
         }
     },
-     deleteProduct: async () => {
+     deleteProduct: async (productId) => {
         set({ loading: true });
         try {
-         
+         await axios.delete(`/products/${productId}`, { withCredentials: true });
+            set((prevProducts) => ({
+                products: prevProducts.products.filter((product) => product._id !== productId),
+                loading: false,
+            }));
+            toast.success("Product deleted successfully");
         } catch (error) {
             set({ loading: false });
             toast.error(error.response.data.message || "An error occurred");
