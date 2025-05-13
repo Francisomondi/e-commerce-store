@@ -22,7 +22,7 @@ app.use(cors({
   credentials: true // If you're using cookies or auth headers
 }));
 
-app.use(express.json())
+app.use(express.json({ limit: "10mb" }));
 app.use(cookieParser());
 
 app.use("/api/auth", authRoutes)
