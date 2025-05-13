@@ -4,14 +4,15 @@ export const addToCart = async (req, res) => {
     try {
         const { productId } = req.body
         const user = req.user
-        const existingItem = await cartItems.find(item=> item.id === productId)
+
+        const existingItem = await user.cartItems.find(item=> item.id === productId)
         if (existingItem) {
             existingItem.quantity += 1
         } else {
-            user.cartItems.push({ id: productId, quantity: 1 })
+            user.cartItems.push(productId )
         }
         await user.save()
-        res.status(200).json({ message: "Product added to cart successfully", cartItems: user.cartItems })
+        res.status(200).json( user.cartItems )
 
     } catch (error) {
         console.log("error adding to cart", error.message)
@@ -36,16 +37,22 @@ export const removeFromCart = async (req, res) => {
     }
 }
 
-export const getCart = async (req, res) => {
-    try {
-        const products = await Product.find({ _id: { $in: req.user.cartItems.map(item => item.id) } }).lean()
-        return res.status(200).json({ message: "Cart fetched successfully", products })
-        
+export const getCartProducts = async (req, res) => {
+	try {
+		const products = await Product.find({ _id: { $in: req.user.cartItems } });
 
-    } catch (error) {
-        res.status(500).json({ message: error.message })
-    }
-}
+		// add quantity for each product
+		const cartItems = products.map((product) => {
+			const item = req.user.cartItems.find((cartItem) => cartItem.id === product.id);
+			return { ...product.toJSON(), quantity: item.quantity };
+		});
+
+		res.json(cartItems);
+	} catch (error) {
+		console.log("Error in getCartProducts controller", error.message);
+		res.status(500).json({ message: "Server error", error: error.message });
+	}
+};
 
 export const updateQuantity = async (req, res) => {
     try {

@@ -2,11 +2,13 @@ import React from 'react'
 import { ShoppingCart, UserPlus, LogIn, LogOut, Lock } from 'lucide-react'
 import { Link, Navigate } from 'react-router-dom'
 import { useUserStore } from '../stores/useUserstore'
+import { useCartStore } from '../stores/useCartStore'
 
 const Navbar = () => {
 
   const {user, Logout} = useUserStore()	
   const isAdmin = user?.role === "admin"
+  const {cart} = useCartStore()
 
 
   const handleLogout = async () => {
@@ -44,7 +46,7 @@ const Navbar = () => {
 						group-hover:bg-emerald-500 transition 
 						duration-300 ease-in-out 
 							'>
-						0
+						{cart.length}
 						</span>
 					</Link>
 				)}

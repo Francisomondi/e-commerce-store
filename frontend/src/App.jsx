@@ -9,13 +9,16 @@ import { useUserStore } from "./stores/useUserstore"
 import LoadingSpinner from "./components/LoadingSpinner"
 import AdminDashboard from "./pages/AdminDashboard"
 import Category from "./pages/Category"
-
+import { useCartStore } from "./stores/useCartStore";
 
 function App() {
   const {user,checkAuth,checkingAuth} = useUserStore()
+  const { getCartItems } = useCartStore();
 
   useEffect(()=>{
+
     checkAuth()
+    getCartItems();
   },[checkAuth])
 
   if(checkingAuth) return <LoadingSpinner />

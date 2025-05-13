@@ -15,11 +15,8 @@ const Login = () => {
 
   const handleSubmit = (e) => {
 		e.preventDefault();
-		
 		login(email, password);
-		toast.success("Logged in successfully");
-		
-
+	
 	};
   
   return (

@@ -2,20 +2,20 @@ import toast from "react-hot-toast";
 import React from "react";
 import { ShoppingCart } from "lucide-react";
 import { useUserStore } from "../stores/useUserstore";
-//import { useCartStore } from "../stores/useCartStore";
+import { useCartStore } from "../stores/useCartStore";
 
 const ProductCard = ({ product }) => {
 	const { user } = useUserStore();
-	//const { addToCart } = useCartStore();
+	const { addToCart } = useCartStore();
 	const handleAddToCart = () => {
-		
+
 		// check if user is logged in
 			if (!user) {
 			toast.error("Please login to add products to cart", { id: "login" });
 			return;
 		} else {
 			// add to cart
-			//addToCart(product);
+			addToCart(product);
 		}
 		
 	};
