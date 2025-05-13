@@ -21,6 +21,6 @@ router.get("/category/:category", getProductsBycategory)
 router.post("/", protectedRoute, adminRoute, createProduct)
 router.get("/:id", getSingleProduct)
 router.delete("/:id", protectedRoute, adminRoute,deleteProduct)
-router.delete("/:id", protectedRoute, adminRoute,toggleFeaturedProduct)
+router.patch("/:id", protectedRoute, adminRoute,toggleFeaturedProduct)
 
 export default router

@@ -38,13 +38,23 @@ export const useProductStore = create((set) => ({
             toast.error(error.response.data.message || "An error occurred");
         }
     },
-     toggleFeaturedProduct: async () => {
-        set({ loading: true });
-        try {
-          
-        } catch (error) {
-            set({ loading: false });
-            toast.error(error.response.data.message || "An error occurred");
-        }
-    },
+  toggleFeaturedProduct: async (productId) => {
+		set({ loading: true });
+		try {
+			const res = await axios.patch(`/products/${productId }`, 
+                {}, { withCredentials: true });
+			// this will update the isFeatured prop of the product
+			set((prevProducts) => ({
+				products: prevProducts.products.map((product) =>
+					product._id === productId ? { ...product, isfeatured: res.data.isfeatured } : product
+				),
+				loading: false,
+			}));
+            toast.success(res.data.message || "Product updated successfully");
+            
+		} catch (error) {
+			set({ loading: false });
+			toast.error(error?.res?.data.message || "Failed to update product");
+		}
+	},
 }));

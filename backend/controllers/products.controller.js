@@ -120,7 +120,7 @@ export const toggleFeaturedProduct = async (req,res)=>{
         product.isfeatured = !product.isfeatured
         const updatedProduct = await product.save()
         await updatedFeaturedProductsCache()
-        res.status(200).json({message: "Product updated successfully", product: updatedProduct})
+        res.status(200).json(updatedProduct)
     } catch (error) {
         res.status(500).json({message: error.message})
     }
