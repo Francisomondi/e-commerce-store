@@ -101,11 +101,11 @@ export const getRecommendedProducts = async (req,res)=>{
     }
 }
 
-export const getProductsBycategory = async (req,res)=>{
+export const getProductsByCategory = async (req,res)=>{
     try {
         const { category } = req.params
         const products = await Product.find({category}).lean()
-        res.status(200).json({message: "Products fetched successfully", products: products})
+        res.status(200).json( {products})
     } catch (error) {
         res.status(500).json({message: error.message})
     }

@@ -6,7 +6,7 @@ import {
     createProduct, 
     deleteProduct,
     getRecommendedProducts,
-    getProductsBycategory,
+    getProductsByCategory,
     toggleFeaturedProduct
 } from "../controllers/products.controller.js"
 
@@ -17,7 +17,7 @@ const router = express.Router()
 router.get("/", protectedRoute, adminRoute, getProducts)
 router.get("/featured", getFeaturedProducts)
 router.get("/recommendation", protectedRoute, getRecommendedProducts)
-router.get("/category/:category", getProductsBycategory)
+router.get("/category/:category", getProductsByCategory)
 router.post("/", protectedRoute, adminRoute, createProduct)
 router.get("/:id", getSingleProduct)
 router.delete("/:id", protectedRoute, adminRoute,deleteProduct)

@@ -86,6 +86,7 @@ export const login = async (req,res)=>{
         _id:user._id,
         role:user.role
     }, message: "User loged in successfully"},
+    
 )
 
 }catch(error){

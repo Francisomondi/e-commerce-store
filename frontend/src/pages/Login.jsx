@@ -18,6 +18,8 @@ const Login = () => {
 		
 		login(email, password);
 		toast.success("Logged in successfully");
+		
+
 	};
   
   return (

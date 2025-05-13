@@ -50,7 +50,6 @@ Logout: async () => {
 		toast.success("Logged out successfully");
 
 		
-		
 	} catch (error) {
 		toast.error(error.response?.data?.message || "An error occurred during logout");
 	}
