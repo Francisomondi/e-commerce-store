@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from "react-router-dom"
 import Home from "./pages/Home"
 import Login from "./pages/Login"
+import CartPage from "./pages/cartPage"
 import Signup from "./pages/Signup"
 import Navbar from "./components/Navbar"
 import React, { useEffect } from 'react'; // ✅ Add this line
@@ -16,10 +17,12 @@ function App() {
   const { getCartItems } = useCartStore();
 
   useEffect(()=>{
-
     checkAuth()
-    getCartItems();
-  },[checkAuth])
+     getCartItems();
+  },[checkAuth],[getCartItems])
+
+
+ 
 
   if(checkingAuth) return <LoadingSpinner />
   
@@ -40,6 +43,7 @@ function App() {
           <Route path="/signup" element={!user ? <Signup /> : <Navigate to="/" /> } />
            <Route path="/admin-dashboard" element={user?.role === "admin" ? <AdminDashboard /> : <Navigate to="/login" /> } />
            <Route path="/category/:category" element={<Category />} />
+           <Route path="/cart" element={user ? <CartPage /> : <Navigate to="/login" />} />
         </Routes>
        
       </div>

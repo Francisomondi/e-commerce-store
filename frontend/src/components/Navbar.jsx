@@ -40,14 +40,15 @@ const Navbar = () => {
 				
 					<Link  to={'/cart'} className='relative group text-gray-300 hover:text-emerald-400 transition duration-300 ease-in-out'>
 						<ShoppingCart className='inline-block mr-1 group-hover:text-emerald-400 size={20}' />
-						<span 
-						className='absolute -top-2 -right-2  bg-emerald-600 
-						text-white rounded-full px-2 py-05 text-xs 
-						group-hover:bg-emerald-500 transition 
-						duration-300 ease-in-out 
-							'>
-						{cart.length}
-						</span>
+						{cart.length > 0 && 
+							<span 
+							className='absolute -top-2 -right-2  bg-emerald-600 
+							text-white rounded-full px-2 py-05 text-xs 
+							group-hover:bg-emerald-500 transition 
+							duration-300 ease-in-out 
+								'>
+							{cart.length}
+						</span>}
 					</Link>
 				)}
 
